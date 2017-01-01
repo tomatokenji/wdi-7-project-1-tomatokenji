@@ -1,0 +1,126 @@
+html, body{
+  height: 100%;
+  width: 100%;
+  font-family: 'Irish Grover', cursive;
+}
+
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+h1{
+  line-height: 10%;
+  font-family: 'Fontdiner Swanky',cursive;
+}
+
+input[type="submit"]{
+  font-family: 'Creepster', cursive;
+  font-size: 2em;
+  background-color: white;
+}
+
+progress {
+  position: absolute;
+  height: 5%;
+  width: 40%;
+  border: 2px solid black;
+}
+
+#player1-score{
+  font-family: 'Creepster', cursive;
+  font-size: 1.5em;
+}
+
+
+.gameplay{
+  position: relative;
+  height: 80%;
+  width: 80%;
+  background-color: blue;
+}
+
+.ownTurf{
+  position: absolute;
+  bottom: 0%;
+  height: 10%;
+  width: 100%;
+  background-color: green;
+}
+
+
+#load_screen{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: pink;
+  z-index: 3;
+}
+
+
+#story{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: absolute;
+  background-color: rgba(63,63,191,0.8);
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+#story>p{
+  padding: 5%;
+  font-size: 1.3em;
+  background-color: red;
+}
+
+.enemy{
+  position: absolute;
+  background-image:url("./image/zombie.png");
+  height: 10%;
+  width: 10%;
+  background-repeat: no-repeat;
+  background-size:contain;
+}
+
+#playing_screen{
+  height: 100%;
+  width: 100%;
+  background-color: purple;
+}
+
+.shootRange{
+  height:90%;
+  width: 100%;
+  background-image: url("./image/gameBackground.png");
+  background-repeat: no-repeat;
+  background-size:cover;
+}
+
+/*note same as the other panels - try find a way to fix to class*/
+#feedback_screen{
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  z-index = 1;
+  background-color: yellow;
+}
+
+.invalid{
+  display: none;
+}

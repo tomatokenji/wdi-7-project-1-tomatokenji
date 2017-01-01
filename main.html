@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title></title>
+
+    <link type="text/css" rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css?family=Creepster|Fontdiner+Swanky|Irish+Grover" rel="stylesheet">
+    <script data-pace-options='{ "ajax": false }' src="./pace/pace.js"></script>
+    <link href="./pace/pace.css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <h1>ZOMBIE ESCAPADE</h1>
+
+    <div class="scoreboard">
+      <div id="player1-score">Player 1 Score</div>
+    </div>
+
+    <div class="nav">
+      <button id="storyButton">Brief</button>
+      <button id="leaderboardButton">Leaderboard</button>
+    </div>
+
+    <div class="gameplay">
+
+      <div id="load_screen">
+        <form onsubmit="return false">
+          name:<br>
+          <input class="username" type="text" name="firstname" value="type here">
+          <br>
+          <input class="submit" type="submit" value="PLAY!">
+        </form>
+        <h3 class="invalid">blank / user has been taken! Please try again </h3>
+
+      </div>
+
+      <div id="story">
+        <p>Your backyard is being attacked by zombies!! They have kidnapped one of your good friends. Save your friend, by defeating the barrage of zombies!</p>
+        <button id="okay">Okay</button>
+      </div>
+
+      <div id="playing_screen">
+        <progress id="health" max="100" value="100"></progress>
+
+        <div class="shootRange"></div>
+        <div class="ownTurf"></div>
+      </div>
+
+      <div id="feedback_screen">
+        <div class="feedback_score">
+          <h1>playerName</h1>
+          <h1>score: </h1>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+    <script
+    src="https://code.jquery.com/jquery-3.1.1.js"
+    integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+    crossorigin="anonymous"></script>
+    <script src="./gameStateMachine.js"></script>
+    <script src="./gameState.js"></script>
+
+  </body>
+</html>
