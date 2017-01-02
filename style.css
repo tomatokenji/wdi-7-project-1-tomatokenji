@@ -61,7 +61,7 @@ progress {
   height: 100%;
   width: 100%;
   background-color: pink;
-  z-index: 3;
+  z-index:4;
 }
 
 
@@ -75,7 +75,7 @@ progress {
   background-color: rgba(63,63,191,0.8);
   height: 100%;
   width: 100%;
-  z-index: 1;
+  z-index: 3;
 }
 
 #story>p{
@@ -94,9 +94,12 @@ progress {
 }
 
 #playing_screen{
+  position:absolute;
+  top:0;
   height: 100%;
   width: 100%;
   background-color: purple;
+  z-index: 2;
 }
 
 .shootRange{
@@ -109,7 +112,8 @@ progress {
 
 /*note same as the other panels - try find a way to fix to class*/
 #feedback_screen{
-  visibility: hidden;
+  position:absolute;
+  top:0;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,8 +121,8 @@ progress {
   text-align: center;
   height: 100%;
   width: 100%;
-  z-index = 1;
-  background-color: yellow;
+  background-color: rgba(63,63,191,0.8);
+  z-index: 1;
 }
 
 .invalid{

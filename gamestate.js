@@ -26,6 +26,7 @@ var fsm = StateMachine.create({
          console.log("blank");
        }else{
          gameObject = new startGame();
+
          console.log(gameObject,"")
         fsm.ready();
        }
@@ -37,7 +38,15 @@ var fsm = StateMachine.create({
       $("#load_screen").hide();
       $('#okay').click(function(){
         $('#story').slideToggle("slow",function(){
+          if(gameObject.hasGameStarted === false){
             fsm.start();
+            gameObject.hasGameStarted = true;
+          }else{
+            $('#feedback_screen').hide();
+            $('#playing_screen').show();
+            gameObject.chapterStart();
+            return null;//for now, supposed to load new chapter
+          }
             console.log("okay button pressed");
         })
       })
@@ -45,12 +54,14 @@ var fsm = StateMachine.create({
 
     onstart: function(){
       console.log("onstart function called");
-      gameObject.spawnEnemy();
+      gameObject.chapterStart();
     },
 
     onquit: function(){},
 
-    onpause: function(){},
+    onpause: function(){
+
+    },
 
     onresume: function(){},
 
