@@ -9,11 +9,15 @@ body{
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  background-image: url("./image/master_background.png");
+  background-repeat: no-repeat;
+  background-size:cover;
 }
 
 h1{
   line-height: 10%;
   font-family: 'Fontdiner Swanky',cursive;
+  color: rgb(216, 17, 87);
 }
 
 input[type="submit"]{
@@ -22,10 +26,14 @@ input[type="submit"]{
   background-color: white;
 }
 
-progress {
+.flex_inline{
   position: absolute;
-  height: 5%;
-  width: 40%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  height: auto;
+  width: 100%;
   border: 2px solid black;
 }
 
@@ -34,12 +42,18 @@ progress {
   font-size: 1.5em;
 }
 
+progress{
+  height:100%;
+  width: 50%;
+}
+
 
 .gameplay{
   position: relative;
   height: 80%;
   width: 80%;
   background-color: blue;
+  border: 5px solid black;
 }
 
 .ownTurf{
@@ -86,7 +100,7 @@ progress {
 
 .enemy{
   position: absolute;
-  background-image:url("./image/zombie.png");
+  /*background-image:url("./image/babyZombie.png");*/
   height: 10%;
   width: 10%;
   background-repeat: no-repeat;
@@ -100,6 +114,7 @@ progress {
   width: 100%;
   background-color: purple;
   z-index: 2;
+  cursor: url("./image/gun-cursor.png"),auto;
 }
 
 .shootRange{
@@ -126,5 +141,9 @@ progress {
 }
 
 .invalid{
+  display: none;
+}
+
+audio{
   display: none;
 }

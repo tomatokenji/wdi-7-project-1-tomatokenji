@@ -10,15 +10,16 @@
     this.totalEnemiesKilled = 0;
     this.startGameIndex = null;
     this.hasGameStarted = false;
+    this.levelObject = null;
 
     var self = this;
 
     //FINAL VARIABLES
     this.ZOMBIES = {
-      baby: {hp:1, attack: 5, image:"", width:"", height:""},
+      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"", height:""},
       teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"", height:"" },
-      zombie:{hp:3, attack: 15, image:"", width:"", height:""},
-      bossZombie:{hp:20, attack: 20, image:"", width:"", height:""},
+      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"", height:""},
+      madScientist:{hp:20, attack: 20, image:"", width:"", height:""},
     };
 
     this.LEVELS = [
@@ -26,12 +27,12 @@
       {level:2, image:"./image/gameBackground2.png", prestory:"you go on to the next forest!", zombie: "teen", kill: 15, spawnNo:2, interval: 1000},
       {level:3, image:"", prestory:"the third forest", zombie:"teen", kill: 15, spawnNo: 3, interval: 1000},
       {level:4, image:"", prestory:"the fourth forest", zombie:"zombie", kill: 15, spawnNo: 3, interval: 1000},
-      {level:5, image:"", prestory:"the fifth forest", zombie:"bossZombie", kill: 15, spawnNo: 2, interval: 1000},
+      {level:5, image:"", prestory:"the fifth forest", zombie:"madScientist", kill: 15, spawnNo: 2, interval: 1000},
     ];
 
     this.WEAPONS = [
-      {name: "pistol", damage: 2, bullets: 200},
-      {name:"shotgun", damage: 5, bullets: 50},
+      {name: "pistol", damage: 2, bullets: 200, sound: "./sounds/pistolsound.wav"},
+      {name:"shotgun", damage: 5, bullets: 50, sound: ""},
     ];
 
     //GAME OBJECTS
@@ -51,13 +52,13 @@
 
     //function to load stories, objects, etc. returns the level object
     function reflectLevel(level){
-      var levelObject = $.grep(self.LEVELS, function(e){
+      var levelArray = $.grep(self.LEVELS, function(e){
         return e.level === level;
       })
-      $(".shootRange").css("background-image", "url(" + levelObject[0].image + ")");
-      $("#story>p").text(levelObject[0].prestory);
-      self.scoreNeeded = levelObject[0].kill;
-      return levelObject[0];
+      $(".shootRange").css("background-image", "url(" + levelArray[0].image + ")");
+      $("#story>p").text(levelArray[0].prestory);
+      self.scoreNeeded = levelArray[0].kill;
+      return levelArray[0];
     };
 
     function spawnEnemy(){
@@ -68,13 +69,14 @@
       $('.shootRange').append('<div class="enemy">');
       var lastEnemy = $('.enemy:last');
       var index = movingEnemy(lastEnemy);
-      var zombie = self.ZOMBIES.teen;
+      var zombie = self.ZOMBIES[self.levelObject.zombie];
       console.log(zombie);
       var newZombie = new Enemy(zombie, index, lastEnemy);
       newZombie.clicks = 0;
       $(lastEnemy).css({
           'left':randomNo+'%',
           'top':randomNo2+'%',
+          'background-image': "url(" + zombie.image + ")",
       });
       zombieOnClick(lastEnemy, newZombie);
       self.enemyArray.push(newZombie);
@@ -82,8 +84,9 @@
 
     //function for game logic
     this.chapterStart = function(){
-      var levelObject = reflectLevel(self.currentLevel);
-      self.startGameIndex = levelEnemySpawn(levelObject.spawnNo, levelObject.interval);
+      self.levelObject = reflectLevel(self.currentLevel);
+      self.startGameIndex = levelEnemySpawn(self.levelObject.spawnNo, self.levelObject.interval);
+      shootingSound();
     }
 
     this.pauseGame = function(){
@@ -91,6 +94,7 @@
       for(var i=0; i<self.enemyArray.length; i++){
         clearInterval(self.enemyArray[i].index);
       }
+      offShootingSound();
     }
 
     this.resumeGame = function(){
@@ -133,6 +137,8 @@
           self.health -= 5;
           console.log(self.health);
           $('#health').prop("value",self.health);
+          $('#ouch')[0].play();
+          died();
         }
       }, 500)
       return index;
@@ -180,6 +186,26 @@
       self.enemiesKilled = 0;
       self.health = 100;
       self.enemyArray = [];
+    }
+
+    //function for shooting sound
+    function shootingSound(){
+      $("#playing_screen").click(function(){
+        $("#shoot")[0].play();
+      })
+    }
+
+    function offShootingSound(){
+      $("#playing_screen").off();
+    }
+
+    //function to check if dead - should be in gameState file
+    function died(){
+      if(self.health<=0){
+        console.log("you have died");
+        self.pauseGame();
+        fsm.onlose();
+      }
     }
 
 

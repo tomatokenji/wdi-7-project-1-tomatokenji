@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title></title>
 
@@ -11,12 +12,11 @@
     <link href="./pace/pace.css" rel="stylesheet" />
   </head>
   <body>
+    <audio id="background-audio" loop="loop" autoplay="autoplay" controls="controls"></audio>
+    <audio id="shoot" controls="controls" src="./sounds/pistolsound.wav"></audio>
+    <audio id="ouch" controls="controls" src="./sounds/gruntsound.wav"></audio>
 
     <h1>ZOMBIE ESCAPADE</h1>
-
-    <div class="scoreboard">
-      <div id="player1-score">Player 1 Score</div>
-    </div>
 
     <div class="nav">
       <button id="storyButton">Brief</button>
@@ -42,8 +42,11 @@
       </div>
 
       <div id="playing_screen">
-        <progress id="health" max="100" value="100"></progress>
-
+        <div class="flex_inline">
+          <p>health</p>
+          <progress id="health" max="100" value="100"></progress>
+          <div id="player1-score">Player 1 Score</div>
+        </div>
         <div class="shootRange"></div>
         <div class="ownTurf"></div>
       </div>

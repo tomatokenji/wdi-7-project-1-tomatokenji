@@ -18,6 +18,7 @@ var fsm = StateMachine.create({
 
   callbacks: {
     onloading: function(){
+      $('#background-audio').attr("src","./sounds/startmusic.ogg");
       $('.submit').click(function(){
         var user = $('.username').val();
         console.log(user);
@@ -69,9 +70,13 @@ var fsm = StateMachine.create({
 
     onreset: function(){},
 
-    onwin: function(){},
+    onwin: function(){
 
-    onlose: function(){},
+    },
+
+    onlose: function(){
+      console.log("you have lost");
+    },
     onfinish: function(){},
 
 
