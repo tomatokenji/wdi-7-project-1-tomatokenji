@@ -15,9 +15,14 @@ body{
 }
 
 h1{
-  line-height: 10%;
   font-family: 'Fontdiner Swanky',cursive;
   color: rgb(216, 17, 87);
+  word-wrap: break-word;
+
+}
+
+span, p{
+  padding-right: 2% auto;
 }
 
 input[type="submit"]{
@@ -30,21 +35,21 @@ input[type="submit"]{
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content:space-around;
   flex-direction: row;
   height: auto;
   width: 100%;
   border: 2px solid black;
 }
 
-#player1-score{
+#player1-score, #zombies-slayed{
   font-family: 'Creepster', cursive;
   font-size: 1.5em;
 }
 
 progress{
   height:100%;
-  width: 50%;
+  width: 30%;
 }
 
 
@@ -76,6 +81,9 @@ progress{
   width: 100%;
   background-color: pink;
   z-index:4;
+  background-image: url("./image/loadscreen.png");
+  background-repeat: no-repeat;
+  background-size:cover;
 }
 
 
@@ -100,7 +108,6 @@ progress{
 
 .enemy{
   position: absolute;
-  /*background-image:url("./image/babyZombie.png");*/
   height: 10%;
   width: 10%;
   background-repeat: no-repeat;
@@ -114,7 +121,7 @@ progress{
   width: 100%;
   background-color: purple;
   z-index: 2;
-  cursor: url("./image/gun-cursor.png"),auto;
+  cursor: url("./image/gun-cursor.png") 15 15, auto;
 }
 
 .shootRange{
@@ -147,3 +154,53 @@ progress{
 audio{
   display: none;
 }
+
+form{
+  height:40%;
+  font-size: 2em;
+  margin: 10%;
+  color: white;
+}
+
+.bloodsplat{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  border: 2px solid black;
+  pointer-events: none;
+}
+
+.bloodsplat>img{
+  display: none;
+  opacity: 0.5;
+  height: 100%;
+  filter: alpha(opacity=50);
+  background-size: cover;
+}
+
+ #leaderboard{
+   display: flex;
+   position:absolute;
+   align-items: center;
+   justify-content: center;
+   height: 100%;
+   width: 100%;
+   background-color: purple;
+   z-index: 0;
+ }
+
+table{
+  border-collapse: collapse;
+}
+ td, th{
+   border: 2px solid grey;
+   text-align: center;
+   width: auto;
+   padding: 2px;
+   margin: 0;
+
+ }

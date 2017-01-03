@@ -15,6 +15,7 @@
     <audio id="background-audio" loop="loop" autoplay="autoplay" controls="controls"></audio>
     <audio id="shoot" controls="controls" src="./sounds/pistolsound.wav"></audio>
     <audio id="ouch" controls="controls" src="./sounds/gruntsound.wav"></audio>
+    <audio id="hit" controls="controls" src="./sounds/hit.wav"></audio>
 
     <h1>ZOMBIE ESCAPADE</h1>
 
@@ -26,6 +27,7 @@
     <div class="gameplay">
 
       <div id="load_screen">
+        <h1>WARNING - Enter at your own risk</h1>
         <form onsubmit="return false">
           name:<br>
           <input class="username" type="text" name="firstname" value="type here">
@@ -42,10 +44,15 @@
       </div>
 
       <div id="playing_screen">
+        <div class="bloodsplat">
+          <img src="./image/zombie-scratch.png">
+        </div>
+
         <div class="flex_inline">
           <p>health</p>
           <progress id="health" max="100" value="100"></progress>
-          <div id="player1-score">Player 1 Score</div>
+          <div id="player1-score"><span>Score </span><span></span></div>
+          <div id="zombies-slayed"><span>zombies killed </span><span></span></div>
         </div>
         <div class="shootRange"></div>
         <div class="ownTurf"></div>
@@ -53,10 +60,49 @@
 
       <div id="feedback_screen">
         <div class="feedback_score">
-          <div class="inline"><span>playerName: </span><span>0</span></div>
-          <div class="inline"><span>Zombies slayed:</span><span>0</span></div>
+          <h1></h1>
+          <div class="inline"><span>playerName: </span><span id="user">0</span></div>
+          <div class="inline"><span>Zombies slayed: </span><span id="score">0</span></div>
+          <div class="inline"><span>Total Zombies slayed: </span><span id="total-score">0</span></div>
         </div>
         <button id="to_nextlevel">Next</button>
+      </div>
+
+      <div id="leaderboard">
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Total Score</th>
+            <th>Zombies Killed</th>
+          </tr>
+          <tr>
+            <td>sample</td>
+            <td>sample</td>
+            <td>sample</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+
+        </table>
+        <button id="finish">play again!</button>
       </div>
 
     </div>
