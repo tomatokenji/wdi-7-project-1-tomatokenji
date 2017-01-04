@@ -20,13 +20,13 @@ var fsm = StateMachine.create({
   callbacks: {
     onloading: function(){
       console.log("onloading function called");
-
+      $(".feedback_score>h1").html("");
       $("#leaderboard").hide();
       $('#load_screen').show();
       $('#background-audio').attr("src","./sounds/startmusic.ogg");
       $('.submit').click(function(){
         var user = $('.username').val();
-        if(user == null || user ==""){
+        if(user === null || user === ""){
          $('.invalid').show();
          console.log("blank");
          $('.submit').off();
@@ -50,6 +50,7 @@ var fsm = StateMachine.create({
       console.log("onready function called");
       $("#load_screen").hide();
       $("#story>p").html(gameObject.levelObject.prestory);
+
       $("#story").show();
       $('#okay').click(function(){
         $('#story').slideToggle("slow",function(){
@@ -58,10 +59,8 @@ var fsm = StateMachine.create({
             gameObject.hasGameStarted = true;
           }else{
             //this is the chapter loading. because sharing button function
-            $('#feedback_screen').hide();
-            $('#playing_screen').show();
             gameObject.chapterStart();
-            return null;
+            $('#playing_screen').show();
           }
             console.log("okay button pressed");
         })
@@ -70,7 +69,10 @@ var fsm = StateMachine.create({
 
     onstart: function(){
       console.log("onstart function called");
-
+      $('#pause').off();
+      $('#pause').click(function(){
+        fsm.pause();
+      })
       gameObject.chapterStart();
       $("#playing_screen").show();
     },
@@ -78,10 +80,22 @@ var fsm = StateMachine.create({
     onquit: function(){},
 
     onpause: function(){
+      gameObject.pauseGame();
+      //for the resume button;
+      $('#pause').off();
+      $('#pause').click(function(){
+        fsm.resume();
+        gameObject.resumeGame();
+      })
 
     },
 
-    onresume: function(){},
+    onresume: function(){
+      $('#pause').off();
+      $('#pause').click(function(){
+        fsm.pause();
+      })
+    },
 
 
 
@@ -127,4 +141,6 @@ var fsm = StateMachine.create({
 //test for gamestatemachine
 console.log(fsm.current);
 // fsm.ready();
+
+//other global items
 var game=null;

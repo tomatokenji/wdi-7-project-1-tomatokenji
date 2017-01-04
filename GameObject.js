@@ -16,6 +16,7 @@
       {level:5, image:"", prestory:"the fifth forest", zombie:"madScientist", kill: 15, spawnNo: 2, interval: 1000},
     ];
 
+    //not used yet - for future use hhaha
     this.WEAPONS = [
       {name: "pistol", damage: 2, bullets: 200, sound: "./sounds/pistolsound.wav"},
       {name:"shotgun", damage: 5, bullets: 50, sound: ""},
@@ -23,12 +24,10 @@
 
     //game variables
     var self = this;
-    this.scoreNeeded = null;
+    this.killNeeded = null;
     this.currentLevel = 1;
     this.enemyArray = [];
     this.playerArray = [];
-    this.enemiesKilled = 0; //go to player attribute.
-    this.totalScore = 0; //go to player attribute.
     this.startGameIndex = null;
     this.hasGameStarted = false;
     this.levelObject = self.LEVELS[0];
@@ -49,10 +48,14 @@
       this.name = name;
       this.icon = null;
       this.totalScore = 0;
+      this.enemiesKilled = 0;
       this.totalEnemiesKilled = 0;
       this.health = 100;
       this.weapons = self.weapons;
       this.maxLevelReached = 0;
+      this.currentAccuracy = 0;
+      this.bulletsShot = 0;
+      this.bulletsHitCount = 0;
     }
 
     this.createPlayer = function(user){
@@ -69,7 +72,8 @@
       })
       $(".shootRange").css("background-image", "url(" + levelArray[0].image + ")");
       $("#story>p").text(levelArray[0].prestory);
-      self.scoreNeeded = levelArray[0].kill;
+      self.killNeeded = levelArray[0].kill;
+      console.log("score",self.killNeeded);
       return levelArray[0];
     };
 
@@ -107,12 +111,19 @@
         clearInterval(self.enemyArray[i].index);
       }
       offShootingSound();
+      $('#pause').css("background-image","url('./image/play.png')");
+      $('.enemy').off();
     }
 
     this.resumeGame = function(){
+
+      $('#pause').css("background-image","url('./image/pause.png')");
       for(var i=0; i<self.enemyArray.length; i++){
-        self.enemyArray[i].index = movingEnemy(self.enemyArray[i].selector);
+        var selector = self.enemyArray[i].selector;
+        self.enemyArray[i].index = movingEnemy(selector);
+        zombieOnClick(selector, self.enemyArray[i]);
       }
+
       self.chapterStart();
     }
 
@@ -162,6 +173,7 @@
       selector.click(function(){
         $("#hit")[0].play();
         enemy.clicks++;
+        self.player.bulletsHitCount++;
         console.log("enemy times clicked:", enemy.clicks);
 
         if(enemy.clicks >= enemy.zombie.hp){
@@ -177,7 +189,7 @@
           var x = self.enemyArray.indexOf(enemy);
           self.enemyArray.splice(x,1);
           console.log("enemy removed");
-          $("#player1-score>span:last").html(++self.enemiesKilled);
+          $("#player1-score>span:last").html(++self.player.enemiesKilled);
           passLevel();
         }
       })
@@ -185,19 +197,26 @@
 
     //b passing level
     function passLevel(){
-      if(self.scoreNeeded <= self.enemiesKilled){
+      console.log("passLevel function called");
+      if(self.killNeeded <= self.player.enemiesKilled){
+        console.log("passed!");
         self.currentLevel++;
         reflectLevel(self.currentLevel);
         self.pauseGame();
         for(var i=0;i<self.enemyArray.length; i++){
           (self.enemyArray[i].selector).remove();
         }
+
         updateAttributes();
+
         $('#playing_screen').hide();
+
         $('#feedback_screen').show();
         $('#to_nextlevel').click(function(){
           $('#feedback_screen').hide();
           $('#story').show();
+          $('#playing_screen').show();
+
           $('#to_nextlevel').off();
         })
       }
@@ -205,24 +224,33 @@
 
     // a continuation of reflectLevel
     function updateAttributes(){
-      self.player.totalScore += self.enemiesKilled;
-      self.player.totalEnemiesKilled += self.enemiesKilled;
-      $('#score').html(self.enemiesKilled);
-      self.enemiesKilled = 0;
+
+      self.player.totalScore += self.player.enemiesKilled;
+      self.player.totalEnemiesKilled += self.player.enemiesKilled;
+      $('#score').html(self.player.enemiesKilled);
+      self.player.enemiesKilled = 0;
       self.player.health = 100;
       self.enemyArray = [];
+      calculateAccuracy();
       //to reflect Attributes on the feedback page
       $('#total-score').html(self.player.totalScore);
       gameObject.playerArray.sort(function(a,b){
         return b.totalScore - a.totalScore;
       });
       updateLeaderboard();
+      //update health bar for later, and the enemies killed for the stage
+      $('#health').prop("value",self.player.health);
+      $("#player1-score>span:last").html(self.player.enemiesKilled);
+
     }
 
     //function for shooting sound
     function shootingSound(){
       $("#playing_screen").click(function(){
         $("#shoot")[0].play();
+        //to keep count of bullets shot
+        self.player.bulletsShot++;
+        console.log("bulletsShot", self.player.bulletsShot);
       })
     }
 
@@ -273,5 +301,14 @@
       $('#okay').off();
       $('#story').off();
     }
+
+    //function to calculate accuracy
+    function calculateAccuracy(){
+      var player = self.player;
+      player.accuracy = player.bulletsHitCount/player.bulletsShot * 100;
+      console.log("accuracy", player.accuracy, "bulletsHitCount", player.bulletsHitCount, "bulletsShot", player.bulletsHitCount);
+    }
+
+
 
   }
