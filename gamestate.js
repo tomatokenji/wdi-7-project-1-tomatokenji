@@ -21,6 +21,7 @@ var fsm = StateMachine.create({
     onloading: function(){
       console.log("onloading function called");
       $(".feedback_score>h1").html("");
+
       $("#leaderboard").hide();
       $('#load_screen').show();
       $('#background-audio').attr("src","./sounds/startmusic.ogg");
@@ -29,7 +30,7 @@ var fsm = StateMachine.create({
         if(user === null || user === ""){
          $('.invalid').show();
          console.log("blank");
-         $('.submit').off();
+
        }else if(game != null){
          gameObject.createPlayer(user);
          $("#user").html(user);
@@ -57,6 +58,9 @@ var fsm = StateMachine.create({
           if(gameObject.hasGameStarted === false){
             fsm.start();
             gameObject.hasGameStarted = true;
+            //update the zombies killed and score for the later screen
+            $("#player1-score>span:last").html(Math.round(gameObject.player.totalScore));
+            $("#zombies-slayed>span:last").html(gameObject.player.enemiesKilled);
           }else{
             //this is the chapter loading. because sharing button function
             gameObject.chapterStart();

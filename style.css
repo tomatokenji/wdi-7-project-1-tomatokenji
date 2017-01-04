@@ -136,7 +136,7 @@ progress{
   width: 100%;
   background-color: purple;
   z-index: 2;
-  cursor: url("./image/gun-cursor.png") 15 15, auto;
+  cursor: url("./image/gun-cursor.png") 20 20, auto;
 }
 
 .shootRange{
@@ -164,6 +164,7 @@ progress{
 
 .invalid{
   display: none;
+  color: red;
 }
 
 audio{
@@ -195,6 +196,7 @@ form{
   height: 100%;
   filter: alpha(opacity=50);
   background-size: cover;
+  z-index: 500;
 
 
  #leaderboard{

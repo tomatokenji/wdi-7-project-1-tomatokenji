@@ -30,7 +30,7 @@
         <h1>WARNING - Enter at your own risk</h1>
         <form onsubmit="return false">
           name:<br>
-          <input class="username" type="text" name="firstname" value="type here">
+          <input class="username" type="text" name="firstname" value="">
           <br>
           <input class="submit" type="submit" value="PLAY!">
         </form>
@@ -40,6 +40,9 @@
 
       <div id="story">
         <p>Your backyard is being attacked by zombies!! They have kidnapped one of your good friends. Save your friend, by defeating the barrage of zombies!</p>
+        <div id="tip1"></div>
+        <div id='tip2'></div>
+
         <button id="okay">Okay</button>
       </div>
 
@@ -55,7 +58,6 @@
           <div id="zombies-slayed"><span>zombies killed </span><span></span></div>
         </div>
         <div class="shootRange"></div>
-        <div class="ownTurf shootRange"></div>
         <button id="pause"></button>
       </div>
 
@@ -63,8 +65,10 @@
         <div class="feedback_score">
           <h1></h1>
           <div class="inline"><span>playerName: </span><span id="user">0</span></div>
-          <div class="inline"><span>Zombies slayed: </span><span id="score">0</span></div>
-          <div class="inline"><span>Total Zombies slayed: </span><span id="total-score">0</span></div>
+          <div class="inline"><span>Zombies slayed: </span><span id="zombyKill">0</span></div>
+          <div class="inline"><span>Accuracy: </span><span id="accuracy">0</span></div>
+          <div class="inline"><span>Bonus achieved: </span><span id="currentBonus">0</span></div>
+          <div class="inline"><span>Total score: </span><span id="total-score">0</span></div>
         </div>
         <button id="to_nextlevel">Next</button>
       </div>

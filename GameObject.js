@@ -2,10 +2,10 @@
   function startGame(){
     //FINAL VARIABLES
     this.ZOMBIES = {
-      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"", height:""},
-      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"", height:"" },
-      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"", height:""},
-      madScientist:{hp:20, attack: 20, image:"", width:"", height:""},
+      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"", height:"", score: 10 },
+      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"", height:"", score: 20  },
+      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"", height:"", score: 30},
+      madScientist:{hp:20, attack: 20, image:"", width:"", height:"", score: 40},
     };
 
     this.LEVELS = [
@@ -33,6 +33,7 @@
     this.levelObject = self.LEVELS[0];
     this.player = null;
     this.leaderboard = [];
+    this.currentBonus = 0;
 
 
 
@@ -47,6 +48,7 @@
     function Player(name){
       this.name = name;
       this.icon = null;
+      this.score = 0;
       this.totalScore = 0;
       this.enemiesKilled = 0;
       this.totalEnemiesKilled = 0;
@@ -189,9 +191,13 @@
           var x = self.enemyArray.indexOf(enemy);
           self.enemyArray.splice(x,1);
           console.log("enemy removed");
-          $("#player1-score>span:last").html(++self.player.enemiesKilled);
+          self.player.score += enemy.zombie.score;
+          self.player.totalScore += enemy.zombie.score;
+          $("#player1-score>span:last").html(Math.round(self.player.totalScore));
+          $("#zombies-slayed>span:last").html(++self.player.enemiesKilled);
           passLevel();
         }
+
       })
     }
 
@@ -202,13 +208,14 @@
         console.log("passed!");
         self.currentLevel++;
         reflectLevel(self.currentLevel);
-        self.pauseGame();
+
+
+
         for(var i=0;i<self.enemyArray.length; i++){
           (self.enemyArray[i].selector).remove();
         }
-
+        self.pauseGame();
         updateAttributes();
-
         $('#playing_screen').hide();
 
         $('#feedback_screen').show();
@@ -224,23 +231,30 @@
 
     // a continuation of reflectLevel
     function updateAttributes(){
-
-      self.player.totalScore += self.player.enemiesKilled;
+      calculateAccuracy();
+      accuracyBonus();
+      self.player.score = 0;
       self.player.totalEnemiesKilled += self.player.enemiesKilled;
-      $('#score').html(self.player.enemiesKilled);
+      self.player.totalScore += self.currentBonus;
+      //to reflect Attributes on the feedback page
+      $('#zombyKill').html(self.player.enemiesKilled);
+      $("#currentBonus").html(Math.round(self.currentBonus));
+      $("#accuracy").html(Math.round(self.player.accuracy*10)/10 + "%");
+
+      $("#total-score").html(Math.round(self.player.totalScore));
+      self.currentBonus = 0;
       self.player.enemiesKilled = 0;
       self.player.health = 100;
       self.enemyArray = [];
-      calculateAccuracy();
-      //to reflect Attributes on the feedback page
-      $('#total-score').html(self.player.totalScore);
+
+
       gameObject.playerArray.sort(function(a,b){
         return b.totalScore - a.totalScore;
       });
       updateLeaderboard();
       //update health bar for later, and the enemies killed for the stage
       $('#health').prop("value",self.player.health);
-      $("#player1-score>span:last").html(self.player.enemiesKilled);
+      $("#player1-score>span:last").html(self.player.totalScore);
 
     }
 
@@ -305,10 +319,20 @@
     //function to calculate accuracy
     function calculateAccuracy(){
       var player = self.player;
-      player.accuracy = player.bulletsHitCount/player.bulletsShot * 100;
-      console.log("accuracy", player.accuracy, "bulletsHitCount", player.bulletsHitCount, "bulletsShot", player.bulletsHitCount);
+      player.accuracy = player.bulletsHitCount/(++player.bulletsShot) * 100;
+      console.log("accuracy", player.accuracy, "bulletsHitCount", player.bulletsHitCount, "bulletsShot", player.bulletsShot);
     }
 
-
+    //pls replace all these console.log into feedbackkkkkk later
+    function accuracyBonus(){
+      if(self.player.accuracy === 100){
+        self.currentBonus = self.player.accuracy*5;
+        console.log("superb!")
+      }else if(self.player.accuracy > 80){
+        self.currentBonus = self.player.accuracy*2;
+      }else{
+        console.log("no bonus for you :/");
+      }
+    }
 
   }
