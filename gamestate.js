@@ -50,7 +50,7 @@ var fsm = StateMachine.create({
     onready: function(){
       console.log("onready function called");
       $("#load_screen").hide();
-      $("#story>p").html(gameObject.levelObject.prestory);
+      gameObject.reflectLevel(1);
 
       $("#story").show();
       $('#okay').click(function(){

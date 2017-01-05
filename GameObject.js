@@ -9,11 +9,11 @@
     };
 
     this.LEVELS = [
-      {level:1, image:"./image/gameBackground.png", prestory:"this is the first forest", zombie: "baby", kill: 5, spawnNo: 1, interval: 2000},
-      {level:2, image:"./image/gameBackground2.png", prestory:"you go on to the next forest!", zombie: "teen", kill: 5, spawnNo:2, interval: 2000},
-      {level:3, image:"", prestory:"the third forest", zombie:"teen", kill: 5, spawnNo: 2, interval: 2000},
-      {level:4, image:"", prestory:"the fourth forest", zombie:"zombie", kill: 15, spawnNo: 3, interval: 1000},
-      {level:5, image:"", prestory:"the fifth forest", zombie:"madScientist", kill: 15, spawnNo: 2, interval: 1000},
+      {level:1, image:"./image/gameBackground.png", prestory:"Zombies have infested the world of Archeas. <br> You are armed with a shotgun. <br> Escape from the world through the space shuttle, located 20KM away from you", instruction:[{des:"shoot at the zombie by clicking once!", pic:'url("./image/BabyZombie.png")'}, {des:"try not to miss... ammunition is limited! ", pic: 'url("./image/gun-cursor.png")'}, {des:"you are at the bottom of the screen. make sure the zombies do not infect you!", img:"#"}] , zombie: "baby", kill: 5, spawnNo: 1, interval: 2000},
+      {level:2, image:"./image/gameBackground2.png", prestory:"CONGRATULATIONS!<br> you have passed your house backyard, into the marshes. A lair of hungry zombies awaits to attack you", instruction:[{des:"The zombies have mutated to be stronger, and now require two shots", pic:"url('image/zombie.png')"}, {des:"try to kill as many as you can - to create your escape path!", pic:"#"}], zombie: "teen", kill: 5, spawnNo:2, interval: 2000},
+      {level:3, image:"", prestory:"the third forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"teen", kill: 5, spawnNo: 2, interval: 2000},
+      {level:4, image:"", prestory:"the fourth forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"zombie", kill: 15, spawnNo: 3, interval: 1000},
+      {level:5, image:"", prestory:"the fifth forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"madScientist", kill: 15, spawnNo: 2, interval: 1000},
     ];
 
     //not used yet - for future use hhaha
@@ -68,12 +68,25 @@
     }
 
     //function to load stories, objects, etc. returns the level object
-    function reflectLevel(level){
+    this.reflectLevel = function(level){
+      console.log("reflectLevel activated");
       var levelArray = $.grep(self.LEVELS, function(e){
         return e.level === level;
       })
+      self.levelObject = levelArray[0];
       $(".shootRange").css("background-image", "url(" + levelArray[0].image + ")");
-      $("#story>p").text(levelArray[0].prestory);
+      $("#typed-strings>p").html(levelArray[0].prestory);
+      console.log("prestory loaded");
+      $(function(){
+          $(".element").typed({
+              stringsElement: $('#typed-strings'),
+              typeSpeed: 20,
+              showCursor: false,
+          })
+      })
+
+      self.createInstructions();
+
       self.killNeeded = levelArray[0].kill;
       console.log("score",self.killNeeded);
       return levelArray[0];
@@ -85,10 +98,16 @@
       //vertical appearance
       var randomNo2 = Math.random()*80;
       $('.shootRange').append('<div class="enemy">');
+
       var lastEnemy = $('.enemy:last');
       var index = movingEnemy(lastEnemy);
       var zombie = self.ZOMBIES[self.levelObject.zombie];
       console.log(zombie);
+
+      //for enemy Healthbar
+      $(lastEnemy).append('<progress class="enemyHealth">');
+      $(lastEnemy).children().attr({"max": zombie.hp , "value": zombie.hp })
+
       var newZombie = new Enemy(zombie, index, lastEnemy);
       newZombie.clicks = 0;
       $(lastEnemy).css({
@@ -102,7 +121,8 @@
 
     //function for game logic
     this.chapterStart = function(){
-      self.levelObject = reflectLevel(self.currentLevel);
+      // self.levelObject =
+      // self.reflectLevel(self.currentLevel);
       self.startGameIndex = levelEnemySpawn(self.levelObject.spawnNo, self.levelObject.interval);
       shootingSound();
     }
@@ -118,6 +138,8 @@
     }
 
     this.resumeGame = function(){
+      //for some bug - when press resume, the bulletshot will count.
+      self.player.bulletsShot--;
 
       $('#pause').css("background-image","url('./image/pause.png')");
       for(var i=0; i<self.enemyArray.length; i++){
@@ -163,6 +185,8 @@
           bloodsplat();
           $('#health').prop("value",self.player.health);
           $('#ouch')[0].play();
+          $('.flex_inline>div>p').html(self.player.health);
+          // blinkingHealthBar();
           console.log(self.player.health);
           died();
         }
@@ -177,6 +201,11 @@
         enemy.clicks++;
         self.player.bulletsHitCount++;
         console.log("enemy times clicked:", enemy.clicks);
+        console.log("enemy hp", enemy.zombie.hp);
+
+        //health bar for zombie
+        var rHp = enemy.zombie.hp-enemy.clicks;
+        $(selector).children().attr({"value": rHp});
 
         if(enemy.clicks >= enemy.zombie.hp){
           clearInterval(enemy.index);
@@ -207,7 +236,7 @@
       if(self.killNeeded <= self.player.enemiesKilled){
         console.log("passed!");
         self.currentLevel++;
-        reflectLevel(self.currentLevel);
+        console.log("you moved on to", self.currentLevel);
 
 
 
@@ -220,6 +249,7 @@
 
         $('#feedback_screen').show();
         $('#to_nextlevel').click(function(){
+          self.reflectLevel(self.currentLevel);
           $('#feedback_screen').hide();
           $('#story').show();
           $('#playing_screen').show();
@@ -254,7 +284,8 @@
       updateLeaderboard();
       //update health bar for later, and the enemies killed for the stage
       $('#health').prop("value",self.player.health);
-      $("#player1-score>span:last").html(self.player.totalScore);
+      $(".flex_inline>div>p").text(self.player.health);
+      $("#player1-score>span:last").html(Math.round(self.player.totalScore));
 
     }
 
@@ -309,7 +340,7 @@
       self.hasGameStarted = false;
       $("#feedback_screen>h1").html("");
       self.currentLevel = 1;
-      self.levelObject = reflectLevel(self.currentLevel);
+      self.levelObject = self.reflectLevel(self.currentLevel);
       self.enemyArray = [];
       $('.enemy').remove();
       $('#okay').off();
@@ -334,5 +365,31 @@
         console.log("no bonus for you :/");
       }
     }
+
+    //function to create unlimited instructions based on the instruction object
+    this.createInstructions = function(){
+      $(".instruction>.temp").remove();
+      console.log("temp removed, new instructions rendered");
+      for(var i=0; i<self.levelObject.instruction.length;i++){
+        $(".instruction").append("<div class='temp'><img class='instructionImg'><p></p></div>");
+        var selector = $(".temp:last>p");
+        var selector2 = $(".temp:last>img");
+        selector.html(self.levelObject.instruction[i].des);
+        var temp = self.levelObject.instruction[i].pic;
+        selector2.css({"background-image": temp});
+      }
+    }
+
+
+
+    // //only for chrome
+    // function blinkingHealthBar(){
+    //   console.log("blinkbarcalled")
+    //   var color = $("-webkit-progress-value").css("background-color");
+    //   $("-webkit-progress-value").css({"background":"red"});
+    //   setTimeout(function(){
+    //     $("-webkit-progress-value").css({"background":color})
+    //   },300)
+    // }
 
   }

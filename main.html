@@ -29,20 +29,22 @@
       <div id="load_screen">
         <h1>WARNING - Enter at your own risk</h1>
         <form onsubmit="return false">
-          name:<br>
+          Survivor:<br>
           <input class="username" type="text" name="firstname" value="">
           <br>
           <input class="submit" type="submit" value="PLAY!">
         </form>
-        <h3 class="invalid">blank / user has been taken! Please try again </h3>
+        <h3 class="invalid">now... don't be a stranger! tell us your name please</h3>
 
       </div>
 
       <div id="story">
-        <p>Your backyard is being attacked by zombies!! They have kidnapped one of your good friends. Save your friend, by defeating the barrage of zombies!</p>
-        <div id="tip1"></div>
-        <div id='tip2'></div>
-
+        <div class="filter"></div>
+        <div id="typed-strings">
+          <p id="#typed-strings_p"></p>
+        </div>
+        <span class="element"></span>
+        <div class="instruction"></div>
         <button id="okay">Okay</button>
       </div>
 
@@ -53,7 +55,7 @@
 
         <div class="flex_inline">
           <p>health</p>
-          <progress id="health" max="100" value="100"></progress>
+          <div><progress id="health" max="100" value="100"></progress><p>100</p></div>
           <div id="player1-score"><span>Score </span><span></span></div>
           <div id="zombies-slayed"><span>zombies killed </span><span></span></div>
         </div>
@@ -120,6 +122,10 @@
     src="https://code.jquery.com/jquery-3.1.1.js"
     integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
     crossorigin="anonymous"></script>
+    <script src="typed.js"></script>
+    <script>
+
+    </script>
     <script src="./gameStateMachine.js"></script>
     <script src="./GameObject.js"></script>
     <script src="./gameState.js"></script>

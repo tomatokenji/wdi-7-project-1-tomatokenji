@@ -13,3 +13,6 @@ http://opengameart.org/content/dark-night-full-moon-background
 
 blood splat screen -
 http://opengameart.org/content/blood-splats
+
+world map screen -
+http://opengameart.org/content/watercolor-world-map
