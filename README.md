@@ -1,4 +1,14 @@
-# ProjectOne
+Technologies used: jquery, html, css, as well as pace, gameStateMachine, and typed.js
+
+Game: A simple shooting game - click on the zombies to kill them
+
+Unsolved problems: need to make code neater, get rid of repetitive code
+
+
+
+
+
+
 
 Credits
 zombie baby -
@@ -16,3 +26,6 @@ http://opengameart.org/content/blood-splats
 
 world map screen -
 http://opengameart.org/content/watercolor-world-map
+
+leaderboard screen
+https://www.videogamesartwork.com/games/enslaved-odyssey-west/hall

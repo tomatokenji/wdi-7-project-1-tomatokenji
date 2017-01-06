@@ -20,12 +20,28 @@ var fsm = StateMachine.create({
   callbacks: {
     onloading: function(){
       console.log("onloading function called");
+
+      //some cool effects for fun
+      $("button").hover(function(){
+        $(this).css({
+          effect: "scale",
+          percent: "120%"
+        },200);
+       });
+
+       //RUN AWAY ZOOM
+
+       var temp = setInterval(function(){
+         $("#load_screen>h1").fadeToggle("fast",'linear')},500);
+
+
       $(".feedback_score>h1").html("");
 
       $("#leaderboard").hide();
       $('#load_screen').show();
       $('#background-audio').attr("src","./sounds/startmusic.ogg");
       $('.submit').click(function(){
+        clearInterval(temp);
         var user = $('.username').val();
         if(user === null || user === ""){
          $('.invalid').show();
@@ -101,28 +117,47 @@ var fsm = StateMachine.create({
       })
     },
 
-
-
     onreset: function(){},
 
     onwin: function(){
 
+    
+        $(".feedback_score>h1").html("congratulations, you managed to escape from the zombies! ");
+        $("#playing_screen").hide();
+        $("#feedback_screen").show();
+
+
+        $("#to_nextlevel").click(function(){
+          $("#feedback_screen").hide();
+          $("#to_nextlevel").off();
+          $("#leaderboard").show();
+          gameObject.restartGame();
+
+          $("#finish").click(function(){
+            fsm.finish();
+            $("#finish").off();
+          })
+
+        })
+
     },
 
     onlose: function(){
-      console.log("you have lost");
+
       $(".feedback_score>h1").html("you were brutally slayed by the zombies, and dismembered");
       $("#playing_screen").hide();
       $("#feedback_screen").show();
+
       $("#to_nextlevel").click(function(){
         $("#feedback_screen").hide();
         $("#to_nextlevel").off();
         $("#leaderboard").show();
         gameObject.restartGame();
+
         $("#finish").click(function(){
           fsm.finish();
           $("#finish").off();
-        })
+        });
 
       })
     },
@@ -131,12 +166,6 @@ var fsm = StateMachine.create({
       //attach handler to go back to main page
     },
 
-    onentermenu: function(){},
-    onlost: function(){},
-    onpausing: function(){},
-    onplaying: function(){},
-    onwon: function(){},
-    onlost: function(){},
 
   },
 

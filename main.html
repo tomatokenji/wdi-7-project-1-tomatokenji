@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:url"           content="https://www.facebook.com/TomatoKenji-1887313018168524/" />
+	<meta property="og:type"          content="website" />
+	<meta property="og:title"         content="Your Website Title" />
+	<meta property="og:description"   content="Your description" />
 
     <title></title>
 
@@ -12,6 +16,27 @@
     <link href="./pace/pace.css" rel="stylesheet" />
   </head>
   <body>
+    <div id="fb-root"></div>
+    <script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '745714642207461',
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+  </script>
+
+
     <audio id="background-audio" loop="loop" autoplay="autoplay" controls="controls"></audio>
     <audio id="shoot" controls="controls" src="./sounds/pistolsound.wav"></audio>
     <audio id="ouch" controls="controls" src="./sounds/gruntsound.wav"></audio>
@@ -19,10 +44,6 @@
 
     <h1>ZOMBIE ESCAPADE</h1>
 
-    <div class="nav">
-      <button id="storyButton">Brief</button>
-      <button id="leaderboardButton">Leaderboard</button>
-    </div>
 
     <div class="gameplay">
 
@@ -60,6 +81,7 @@
           <div id="zombies-slayed"><span>zombies killed </span><span></span></div>
         </div>
         <div class="shootRange"></div>
+        <div id="ownTurf"></div>
         <button id="pause"></button>
       </div>
 
@@ -76,6 +98,7 @@
       </div>
 
       <div id="leaderboard">
+        <h1>Hall of Fame</h1>
         <table>
           <tr>
             <th>Name</th>
@@ -116,7 +139,7 @@
 
     </div>
 
-
+      <div class="fb-like" data-href="https://www.facebook.com/TomatoKenji-1887313018168524/" data-layout="standard" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>
 
     <script
     src="https://code.jquery.com/jquery-3.1.1.js"

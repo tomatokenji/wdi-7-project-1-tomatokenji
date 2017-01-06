@@ -2,18 +2,18 @@
   function startGame(){
     //FINAL VARIABLES
     this.ZOMBIES = {
-      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"", height:"", score: 10 },
-      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"", height:"", score: 20  },
-      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"", height:"", score: 30},
-      madScientist:{hp:20, attack: 20, image:"", width:"", height:"", score: 40},
+      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"10%", height:"10%", score: 10, movespeed: 500, },
+      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"10%", height:"10%", score: 20, movespeed: 400,  },
+      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"15%", height:"15%", score: 30, movespeed: 300,},
+      madScientist:{hp:20, attack: 20, image:"", width:"20%", height:"20%", score: 40, movespeed: 600,},
     };
 
     this.LEVELS = [
       {level:1, image:"./image/gameBackground.png", prestory:"Zombies have infested the world of Archeas. <br> You are armed with a shotgun. <br> Escape from the world through the space shuttle, located 20KM away from you", instruction:[{des:"shoot at the zombie by clicking once!", pic:'url("./image/BabyZombie.png")'}, {des:"try not to miss... ammunition is limited! ", pic: 'url("./image/gun-cursor.png")'}, {des:"you are at the bottom of the screen. make sure the zombies do not infect you!", img:"#"}] , zombie: "baby", kill: 5, spawnNo: 1, interval: 2000},
-      {level:2, image:"./image/gameBackground2.png", prestory:"CONGRATULATIONS!<br> you have passed your house backyard, into the marshes. A lair of hungry zombies awaits to attack you", instruction:[{des:"The zombies have mutated to be stronger, and now require two shots", pic:"url('image/zombie.png')"}, {des:"try to kill as many as you can - to create your escape path!", pic:"#"}], zombie: "teen", kill: 5, spawnNo:2, interval: 2000},
-      {level:3, image:"", prestory:"the third forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"teen", kill: 5, spawnNo: 2, interval: 2000},
-      {level:4, image:"", prestory:"the fourth forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"zombie", kill: 15, spawnNo: 3, interval: 1000},
-      {level:5, image:"", prestory:"the fifth forest", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"madScientist", kill: 15, spawnNo: 2, interval: 1000},
+      {level:2, image:"./image/gameBackground2.png", prestory:"CONGRATULATIONS!<br> you manage to pass your house backyard, into the marshes. A lair of hungry zombies awaits to attack you", instruction:[{des:"The zombies have mutated to be stronger, and now require two shots", pic:"url('./image/zombie.png')"}, {des:"try to kill as many as you can to create your escape path!", pic:'url("./image/goodluck.png")'}], zombie: "teen", kill: 10, spawnNo:2, interval: 2000},
+      {level:3, image:"./image/gameBackground3.jpg", prestory:"A job well done. <br> Attracted to the gun sounds, the next wave of zombies are starting to appear before you! Make your way towards your goal - you are halfway through! ", instruction:[{des:"good luck to you", pic:"url('./image/goodluck.png')"}], zombie:"teen", kill: 5, spawnNo: 2, interval: 2000},
+      {level:4, image:"./image/gameBackground4.jpg", prestory:"Good job! you are now 5KM away from the destination - escape seems not so far away now.", instruction:[{des:"shoot at the zombie by clicking thrice!", pic:"url('./image/adultZombie.png')"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"zombie", kill: 10, spawnNo: 2, interval: 2000},
+      {level:5, image:"./image/gameBackground5.jpg", prestory:"Here comes the mad scientist", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"madScientist", kill: 15, spawnNo: 2, interval: 2000},
     ];
 
     //not used yet - for future use hhaha
@@ -36,8 +36,6 @@
     this.currentBonus = 0;
 
 
-
-
     //GAME OBJECTS
     function Enemy(zombie, index, selector){
       this.zombie = zombie;
@@ -58,6 +56,7 @@
       this.currentAccuracy = 0;
       this.bulletsShot = 0;
       this.bulletsHitCount = 0;
+      this.medalArray=[]; //if there is time to implement - else no.
     }
 
     this.createPlayer = function(user){
@@ -73,6 +72,7 @@
       var levelArray = $.grep(self.LEVELS, function(e){
         return e.level === level;
       })
+      $(".bloodsplat>img").off();
       self.levelObject = levelArray[0];
       $(".shootRange").css("background-image", "url(" + levelArray[0].image + ")");
       $("#typed-strings>p").html(levelArray[0].prestory);
@@ -80,7 +80,7 @@
       $(function(){
           $(".element").typed({
               stringsElement: $('#typed-strings'),
-              typeSpeed: 20,
+              typeSpeed: 5,
               showCursor: false,
           })
       })
@@ -93,20 +93,40 @@
     };
 
     function spawnEnemy(){
-      //horizontal appearance
-      var randomNo = Math.random()*90;
-      //vertical appearance
-      var randomNo2 = Math.random()*80;
+
       $('.shootRange').append('<div class="enemy">');
 
       var lastEnemy = $('.enemy:last');
-      var index = movingEnemy(lastEnemy);
+
       var zombie = self.ZOMBIES[self.levelObject.zombie];
       console.log(zombie);
 
+      //function to get the height and width of the monster
+      $(lastEnemy).css({
+        "height": zombie.height,
+        "width":zombie.width,
+      })
+
+      var index = movingEnemy(lastEnemy, zombie.movespeed, zombie);
       //for enemy Healthbar
       $(lastEnemy).append('<progress class="enemyHealth">');
       $(lastEnemy).children().attr({"max": zombie.hp , "value": zombie.hp })
+
+      //barriers
+      var rightBarrier = 100 - parseInt(zombie.width);
+      var topBarrier = 100 - parseInt(zombie.height) - 20;
+      //horizontal appearance
+      var step1 = Math.random()*rightBarrier;
+      var step2 = step1/5;
+      console.log(step2);
+      var randomNo = Math.round(step2)*5;
+      //vertical appearance
+      step1 = Math.random()*topBarrier;
+      console.log("step1",step1);
+      step2 = step1/5;
+      console.log("step2",step2);
+      var randomNo2 = Math.round(step2)*5;
+      console.log(randomNo,randomNo2);
 
       var newZombie = new Enemy(zombie, index, lastEnemy);
       newZombie.clicks = 0;
@@ -144,7 +164,7 @@
       $('#pause').css("background-image","url('./image/pause.png')");
       for(var i=0; i<self.enemyArray.length; i++){
         var selector = self.enemyArray[i].selector;
-        self.enemyArray[i].index = movingEnemy(selector);
+        self.enemyArray[i].index = movingEnemy(selector, self.enemyArray[i].zombie.movespeed, self.enemyArray[i].zombie);
         zombieOnClick(selector, self.enemyArray[i]);
       }
 
@@ -161,36 +181,47 @@
     }
     //other functions
       //random moving zombie animation
-    function movingEnemy(something){
+    function movingEnemy(something, moveSpeed, zombie){
       var index = setInterval(function(){
         var random = Math.random();
         var topPosition = parseInt(something[0].style.top);
         var leftPosition = parseInt(something[0].style.left);
+        //collision detection
+        var topBarrier = 100 - parseInt(zombie.height) - 10;
+        var rightBarrier = 100 - parseInt(zombie.width);
 
-        if(random<0.33 && leftPosition <= 85.1){
+
+        if(topPosition>=topBarrier){
+
+        }else if(random<0.33 && leftPosition <= rightBarrier){
           $(something).animate({
             'left': "+=5%",
-          },500,"linear");
-        }else if(random<0.66 && topPosition <= 80.1){
+          },moveSpeed,"linear");
+        }else if(random<0.66 && topPosition <= topBarrier){
           $(something).animate({
             'top':"+=5%",
-          },500,"linear");
+          },moveSpeed,"linear");
         }else if(leftPosition>2){
           $(something).animate({
             'left':"-=5%",
-          },500,"linear");
+          },moveSpeed,"linear");
         }
-        if(topPosition >= 80){
+        if(topPosition >= topBarrier){
           self.player.health -= 5;
-          bloodsplat();
+          bloodsplat(moveSpeed);
           $('#health').prop("value",self.player.health);
+
+          if($('#ouch').duration>0){
+            $('#ouch').trigger("pause");
+          }
           $('#ouch')[0].play();
+
           $('.flex_inline>div>p').html(self.player.health);
           // blinkingHealthBar();
           console.log(self.player.health);
           died();
         }
-      }, 500)
+      }, moveSpeed)
       return index;
     }
 
@@ -234,9 +265,14 @@
     function passLevel(){
       console.log("passLevel function called");
       if(self.killNeeded <= self.player.enemiesKilled){
-        console.log("passed!");
-        self.currentLevel++;
-        console.log("you moved on to", self.currentLevel);
+        if(self.currentLevel < self.LEVELS.length){
+          console.log("passed!");
+          self.currentLevel++;
+          console.log("you moved on to", self.currentLevel);
+        }else{
+          fsm.win;
+        }
+
 
 
 
@@ -309,14 +345,15 @@
         console.log("you have died");
         self.pauseGame();
         updateAttributes();
+        $('#feedback_screen').css({"background-image":"url('./image/gameover.jpg')"});
         self.leaderboard.push(self.player);
         fsm.lose();
       }
     }
 
     //function to animate the fade in fade out of the bloodsplat on player
-    function bloodsplat(){
-      $(".bloodsplat>img").fadeIn("fast").fadeOut("fast");
+    function bloodsplat(movespeed){
+      $(".bloodsplat>img").fadeIn(100).fadeOut(100);
     }
 
 //2,7 and 0,4
@@ -330,7 +367,11 @@
       for(var i=0; i<length;i++){
         var temp = "tr:nth-child(" + (i+2) + ")";
         var extended = temp + " td:nth-child(1)";
+        var extended2 = temp + " td:nth-child(2)";
+        var extended3 = temp + " td:nth-child(3)";
         $(extended).text(self.playerArray[i].name);
+        $(extended2).text(self.playerArray[i].totalScore);
+        $(extended3).text(self.playerArray[i].totalEnemiesKilled)
       }
 
 
