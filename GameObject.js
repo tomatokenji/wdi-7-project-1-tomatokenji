@@ -5,7 +5,7 @@
       baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"10%", height:"10%", score: 10, movespeed: 500, },
       teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"10%", height:"10%", score: 20, movespeed: 400,  },
       zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"15%", height:"15%", score: 30, movespeed: 300,},
-      madScientist:{hp:20, attack: 20, image:"", width:"20%", height:"20%", score: 40, movespeed: 600,},
+      madScientist:{hp:4, attack: 20, image:"./image/adultZombie.png", width:"20%", height:"20%", score: 40, movespeed: 400,},
     };
 
     this.LEVELS = [
@@ -228,6 +228,8 @@
     //check if zombie killed, and kill the zombie
     function zombieOnClick(selector, enemy){
       selector.click(function(){
+        clearInterval(enemy.index);
+
         $("#hit")[0].play();
         enemy.clicks++;
         self.player.bulletsHitCount++;
