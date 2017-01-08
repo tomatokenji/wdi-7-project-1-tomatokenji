@@ -3,7 +3,6 @@
 var fsm = StateMachine.create({
   //loading - enter username and details page
   //menu - story
-
   initial: 'loading',
   events: [
     {name:"ready", from:"loading", to: "menu"},
@@ -32,8 +31,8 @@ var fsm = StateMachine.create({
        //RUN AWAY ZOOM
 
        var temp = setInterval(function(){
-         $("#load_screen>h1").fadeToggle("fast",'linear')},500);
-
+         $("#load_screen>h1").fadeToggle("fast",'linear')
+       },500);
 
       $(".feedback_score>h1").html("");
 
@@ -117,49 +116,14 @@ var fsm = StateMachine.create({
       })
     },
 
-    onreset: function(){},
-
     onwin: function(){
-
-    
         $(".feedback_score>h1").html("congratulations, you managed to escape from the zombies! ");
-        $("#playing_screen").hide();
-        $("#feedback_screen").show();
-
-
-        $("#to_nextlevel").click(function(){
-          $("#feedback_screen").hide();
-          $("#to_nextlevel").off();
-          $("#leaderboard").show();
-          gameObject.restartGame();
-
-          $("#finish").click(function(){
-            fsm.finish();
-            $("#finish").off();
-          })
-
-        })
-
+        changePageToFeedback();
     },
 
     onlose: function(){
-
       $(".feedback_score>h1").html("you were brutally slayed by the zombies, and dismembered");
-      $("#playing_screen").hide();
-      $("#feedback_screen").show();
-
-      $("#to_nextlevel").click(function(){
-        $("#feedback_screen").hide();
-        $("#to_nextlevel").off();
-        $("#leaderboard").show();
-        gameObject.restartGame();
-
-        $("#finish").click(function(){
-          fsm.finish();
-          $("#finish").off();
-        });
-
-      })
+      changePageToFeedback();
     },
 
     onfinish: function(){
@@ -177,3 +141,21 @@ console.log(fsm.current);
 
 //other global items
 var game=null;
+
+function changePageToFeedback(){
+  $("#playing_screen").hide();
+  $("#feedback_screen").show();
+
+  $("#to_nextlevel").click(function(){
+    $("#feedback_screen").hide();
+    $("#to_nextlevel").off();
+    $("#leaderboard").show();
+    gameObject.restartGame();
+
+    $("#finish").click(function(){
+      fsm.finish();
+      $("#finish").off();
+    });
+  })
+
+}

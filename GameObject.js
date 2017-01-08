@@ -2,15 +2,15 @@
   function startGame(){
     //FINAL VARIABLES
     this.ZOMBIES = {
-      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"10%", height:"10%", score: 10, movespeed: 500, },
-      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"10%", height:"10%", score: 20, movespeed: 400,  },
-      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"15%", height:"15%", score: 30, movespeed: 300,},
-      madScientist:{hp:4, attack: 20, image:"./image/adultZombie.png", width:"20%", height:"20%", score: 40, movespeed: 400,},
+      baby: {hp:1, attack: 5, image:"./image/babyZombie.png", width:"10%", height:"10%", score: 10, movespeed: 400, acceleration: 50},
+      teen: {hp:2, attack: 10, image:"./image/zombie.png", width:"10%", height:"10%", score: 20, movespeed: 400, acceleration: 100 },
+      zombie:{hp:3, attack: 15, image:"./image/adultZombie.png", width:"15%", height:"15%", score: 30, movespeed: 300, acceleration: 100},
+      madScientist:{hp:5, attack: 20, image:"./image/adultZombie.png", width:"20%", height:"20%", score: 40, movespeed: 300, acceleration:50},
     };
 
     this.LEVELS = [
-      {level:1, image:"./image/gameBackground.png", prestory:"Zombies have infested the world of Archeas. <br> You are armed with a shotgun. <br> Escape from the world through the space shuttle, located 20KM away from you", instruction:[{des:"shoot at the zombie by clicking once!", pic:'url("./image/BabyZombie.png")'}, {des:"try not to miss... ammunition is limited! ", pic: 'url("./image/gun-cursor.png")'}, {des:"you are at the bottom of the screen. make sure the zombies do not infect you!", img:"#"}] , zombie: "baby", kill: 5, spawnNo: 1, interval: 2000},
-      {level:2, image:"./image/gameBackground2.png", prestory:"CONGRATULATIONS!<br> you manage to pass your house backyard, into the marshes. A lair of hungry zombies awaits to attack you", instruction:[{des:"The zombies have mutated to be stronger, and now require two shots", pic:"url('./image/zombie.png')"}, {des:"try to kill as many as you can to create your escape path!", pic:'url("./image/goodluck.png")'}], zombie: "teen", kill: 10, spawnNo:2, interval: 2000},
+      {level:1, image:"./image/gameBackground.png", prestory:"Zombies have infested the world of Archeas. <br> You are armed with a shotgun. <br> Escape from the world through the space shuttle, located 20KM away from you", instruction:[{des:"shoot at the zombie by clicking once!", pic:'url("./image/BabyZombie.png")'}, {des:"try not to miss... ammunition is limited! ", pic: 'url("./image/gun-cursor.png")'}, {des:"you are at the bottom of the screen. make sure the zombies do not infect you!", img:"#"}] , zombie: "baby", kill: 5, spawnNo: 1, interval: 4000},
+      {level:2, image:"./image/gameBackground2.png", prestory:"CONGRATULATIONS!<br> you manage to pass your house backyard, into the marshes. A lair of hungry zombies awaits to attack you", instruction:[{des:"The zombies have mutated to be stronger, and now require two shots", pic:"url('./image/zombie.png')"}, {des:"try to kill as many as you can to create your escape path!", pic:'url("./image/goodluck.png")'}], zombie: "teen", kill: 10, spawnNo:2, interval: 4000},
       {level:3, image:"./image/gameBackground3.jpg", prestory:"A job well done. <br> Attracted to the gun sounds, the next wave of zombies are starting to appear before you! Make your way towards your goal - you are halfway through! ", instruction:[{des:"good luck to you", pic:"url('./image/goodluck.png')"}], zombie:"teen", kill: 5, spawnNo: 2, interval: 2000},
       {level:4, image:"./image/gameBackground4.jpg", prestory:"Good job! you are now 5KM away from the destination - escape seems not so far away now.", instruction:[{des:"shoot at the zombie by clicking thrice!", pic:"url('./image/adultZombie.png')"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"zombie", kill: 10, spawnNo: 2, interval: 2000},
       {level:5, image:"./image/gameBackground5.jpg", prestory:"Here comes the mad scientist", instruction:[{des:"shoot at the zombie by clicking once!", pic:"#"}, {des:"try not to miss... ammunition is limited! ", pic:"#"}], zombie:"madScientist", kill: 15, spawnNo: 2, interval: 2000},
@@ -41,6 +41,7 @@
       this.zombie = zombie;
       this.index = index;
       this.selector = selector;
+      this.moveSpeed = 0;
     };
 
     function Player(name){
@@ -63,7 +64,6 @@
       var player = new Player(user);
       self.playerArray.push(player);
       self.player = self.playerArray[self.playerArray.length-1];
-      console.log(self.player);
     }
 
     //function to load stories, objects, etc. returns the level object
@@ -101,7 +101,7 @@
       var zombie = self.ZOMBIES[self.levelObject.zombie];
       console.log(zombie);
 
-      //function to get the height and width of the monster
+      //function to set the height and width of the monster
       $(lastEnemy).css({
         "height": zombie.height,
         "width":zombie.width,
@@ -114,7 +114,7 @@
 
       //barriers
       var rightBarrier = 100 - parseInt(zombie.width);
-      var topBarrier = 100 - parseInt(zombie.height) - 20;
+      var topBarrier = 100 - parseInt(zombie.height) - 30;
       //horizontal appearance
       var step1 = Math.random()*rightBarrier;
       var step2 = step1/5;
@@ -186,26 +186,42 @@
         var random = Math.random();
         var topPosition = parseInt(something[0].style.top);
         var leftPosition = parseInt(something[0].style.left);
+
         //collision detection
         var topBarrier = 100 - parseInt(zombie.height) - 10;
         var rightBarrier = 100 - parseInt(zombie.width);
 
-
-        if(topPosition>=topBarrier){
-
-        }else if(random<0.33 && leftPosition <= rightBarrier){
-          $(something).animate({
-            'left': "+=5%",
-          },moveSpeed,"linear");
-        }else if(random<0.66 && topPosition <= topBarrier){
+        if(random<0.33){
+          if(leftPosition <= rightBarrier){
+            console.log("moved right");
+            $(something).animate({
+              'left': "+=5%"
+            },moveSpeed,"linear");
+          }else{
+            console.log("moved left");
+            $(something).animate({
+              'left': "-=5%",
+            },moveSpeed,"linear");
+          }
+        }else if(random<0.66){
+          if(leftPosition>0){
+            console.log("moved left");
+            $(something).animate({
+              'left': "-=5%",
+            },moveSpeed,"linear");
+          }else{
+            console.log("moved right");
+            $(something).animate({
+              'left': "+=5%",
+            },moveSpeed,"linear");
+          }
+        }else if(topPosition < topBarrier){
+          console.log("moved down");
           $(something).animate({
             'top':"+=5%",
           },moveSpeed,"linear");
-        }else if(leftPosition>2){
-          $(something).animate({
-            'left':"-=5%",
-          },moveSpeed,"linear");
         }
+
         if(topPosition >= topBarrier){
           self.player.health -= 5;
           bloodsplat(moveSpeed);
@@ -229,6 +245,8 @@
     function zombieOnClick(selector, enemy){
       selector.click(function(){
         clearInterval(enemy.index);
+        enemy.moveSpeed = enemy.zombie.movespeed-enemy.zombie.acceleration;
+        enemy.index = movingEnemy(selector, enemy.moveSpeed, enemy.zombie);
 
         $("#hit")[0].play();
         enemy.clicks++;
@@ -263,7 +281,7 @@
       })
     }
 
-    //b passing level
+    //check for passing level
     function passLevel(){
       console.log("passLevel function called");
       if(self.killNeeded <= self.player.enemiesKilled){
@@ -274,9 +292,6 @@
         }else{
           fsm.win;
         }
-
-
-
 
         for(var i=0;i<self.enemyArray.length; i++){
           (self.enemyArray[i].selector).remove();
@@ -304,6 +319,7 @@
       self.player.score = 0;
       self.player.totalEnemiesKilled += self.player.enemiesKilled;
       self.player.totalScore += self.currentBonus;
+      self.player.totalScore = Math.round(self.player.totalScore);
       //to reflect Attributes on the feedback page
       $('#zombyKill').html(self.player.enemiesKilled);
       $("#currentBonus").html(Math.round(self.currentBonus));
@@ -315,7 +331,6 @@
       self.player.health = 100;
       self.enemyArray = [];
 
-
       gameObject.playerArray.sort(function(a,b){
         return b.totalScore - a.totalScore;
       });
@@ -324,7 +339,6 @@
       $('#health').prop("value",self.player.health);
       $(".flex_inline>div>p").text(self.player.health);
       $("#player1-score>span:last").html(Math.round(self.player.totalScore));
-
     }
 
     //function for shooting sound
@@ -375,8 +389,6 @@
         $(extended2).text(self.playerArray[i].totalScore);
         $(extended3).text(self.playerArray[i].totalEnemiesKilled)
       }
-
-
     }
 
     this.restartGame = function(){
@@ -397,15 +409,12 @@
       console.log("accuracy", player.accuracy, "bulletsHitCount", player.bulletsHitCount, "bulletsShot", player.bulletsShot);
     }
 
-    //pls replace all these console.log into feedbackkkkkk later
+    //calculation for accuracyBonus
     function accuracyBonus(){
       if(self.player.accuracy === 100){
-        self.currentBonus = self.player.accuracy*5;
-        console.log("superb!")
+        self.currentBonus = self.player.accuracy*3;
       }else if(self.player.accuracy > 80){
         self.currentBonus = self.player.accuracy*2;
-      }else{
-        console.log("no bonus for you :/");
       }
     }
 
@@ -422,17 +431,5 @@
         selector2.css({"background-image": temp});
       }
     }
-
-
-
-    // //only for chrome
-    // function blinkingHealthBar(){
-    //   console.log("blinkbarcalled")
-    //   var color = $("-webkit-progress-value").css("background-color");
-    //   $("-webkit-progress-value").css({"background":"red"});
-    //   setTimeout(function(){
-    //     $("-webkit-progress-value").css({"background":color})
-    //   },300)
-    // }
 
   }
