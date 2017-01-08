@@ -39,7 +39,6 @@ h1{
 input[type="submit"]{
   font-family: 'Creepster', cursive;
   font-size: 2em;
-  background-color: white;
 }
 
 progress{
@@ -148,8 +147,6 @@ progress::-webkit-progress-value {
   outline: none;
 }
 
-
-
 .gameplay{
   position: relative;
   height: 80%;
@@ -157,14 +154,12 @@ progress::-webkit-progress-value {
   border: 5px solid black;
 }
 
-
 .ownTurf{
   position: absolute;
   bottom: 0%;
   height: 10%;
   width: 100%;
 }
-
 
 #load_screen{
   z-index:4;
@@ -229,7 +224,6 @@ progress::-webkit-progress-value {
   top:0;
   height: 100%;
   width: 100%;
-  background-color: purple;
   z-index: 2;
   cursor: url("./image/gun-cursor.png") 20 20, auto;
 }
