@@ -6,6 +6,7 @@ The game should run once the files are served up to any web server.
 
 ## Live Version
 Currently it is only on Github. 
+Accessible [here](https://tomatokenji.github.io/wdi-7-project-1-tomatokenji/)
 
 ## Built With
 * HTML and CSS
